@@ -14,6 +14,7 @@ namespace RecipePrototype.Controllers
 
         public ActionResult Index()
         {
+            //http://blog.stevensanderson.com/2008/12/22/editing-a-variable-length-list-of-items-in-aspnet-mvc/
             var recipes = db.Recipes.ToList();
             var ingredients = db.Ingredients.ToList();
             return View(recipes);
