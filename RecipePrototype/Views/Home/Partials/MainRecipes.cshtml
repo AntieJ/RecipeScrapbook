@@ -1,0 +1,97 @@
+﻿@using RecipePrototype.Models
+@model RecipesVM
+@{
+    var skip = 0;
+}
+<h2 style="font-family: 'Roboto';">Lydia's Recipes</h2>
+
+
+    @using (Html.BeginForm("Search", "Home"))
+    {
+        <div class="input-group">
+            @Html.TextBox("searchTerm")
+            <input type="submit" class="btn btn-default" value="Search" style="display:inline">
+
+            @Html.ActionLink("Create", "Create", null, new { @class = "btn btn-info" })
+        </div>
+    }
+            <p></p>
+
+<table class="table table-hover table-striped">
+    <tr>
+        <th>
+            <p>Name</p>
+        </th>
+        <th>
+            <p>Notes</p>
+        </th>
+        <th>
+            <p>WW Points</p>
+        </th>
+        <th>
+            <p>Meal</p>
+        </th>
+        <th>
+            <p>Healthy Rating</p>
+        </th>
+        <th>
+            <p>Filling and Healthy</p>
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Recipes)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Method)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeightWatchersPoints)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MealType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HealthyRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FillingAndHealthy)
+            </td>
+            <td>
+                <p>@Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-info btn-xs" })</p>
+                <p>@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-info btn-xs" })</p>
+                <p>@Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-info btn-xs" })</p>
+            </td>
+        </tr>
+
+    }
+
+</table>
+
+<div class="center-block">
+<nav>
+    <ul class="pagination">
+        <li>
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (int i = 0; i < Model.PagesToShow; i++)
+        {
+            <li>@Html.ActionLink((i + 1).ToString(), "Index", new RouteValueDictionary() { { "skip", skip }, { "take", 5 } })</li>
+            { skip = skip + 5; }
+        }
+        <li>
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    </div>
+

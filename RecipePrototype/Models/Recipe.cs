@@ -17,5 +17,6 @@ namespace RecipePrototype.Models
         public MealType MealType { get; set; }
         public List<string> Tags { get; set; }
         public HealthyRating HealthyRating { get; set; }
+        public bool FillingAndHealthy { get; set; }
     }
 }

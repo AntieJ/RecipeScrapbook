@@ -12,12 +12,18 @@ namespace RecipePrototype.Controllers
     {
         private RecipeDBContext db = new RecipeDBContext();
 
-        public ActionResult Index()
+        public ActionResult Index(int skip=0, int take=5)
         {
-            //http://blog.stevensanderson.com/2008/12/22/editing-a-variable-length-list-of-items-in-aspnet-mvc/
-            var recipes = db.Recipes.ToList();
+            IEnumerable<Recipe> recipes = db.Recipes;
+            var recipesList = recipes.ToList().Skip(skip).Take(take);
             var ingredients = db.Ingredients.ToList();
-            return View(recipes);
+            var vm = new RecipesVM()
+            {
+                Recipes = recipesList,
+                TotalRecipes = recipes.Count(),
+                PagesToShow =  (int)Math.Ceiling((float)recipes.Count()/5)
+            };
+            return View(vm);
         }
 
         public ActionResult About()
@@ -60,7 +66,7 @@ namespace RecipePrototype.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Method, Ingredients, WeightWatchersPoints,MealType,HealthyRating")] Recipe recipe)
+        public ActionResult Create(Recipe recipe)
         {
             if (ModelState.IsValid)
             {

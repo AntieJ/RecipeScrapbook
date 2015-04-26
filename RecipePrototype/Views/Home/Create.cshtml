@@ -33,22 +33,22 @@
         
         <div class="form-group">
             @Html.LabelFor(model => model.Ingredients, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div onclick= "addRow()" style="color: Blue; text-decoration: underline;">
-                Add ingredient
-            </div>
             <div class="col-md-10">
-                @*@for (int i = 0; i < ingredientQuantity; i++)
-            {
-                    <p>Name:</p>@Html.TextBoxFor(model=>model.Ingredients[i].Name)
-                    <p>Quantity:</p>@Html.TextBoxFor(model => model.Ingredients[i].Quantity)
-            }*@
-                
+                <div onclick="addRow()" style="color: Blue; text-decoration: underline; display:inline;cursor: pointer;">
+                    Add ingredient
+                </div>
+                <div class="" onclick="removeRow()" style="color: Blue; text-decoration: underline; display:inline;cursor: pointer;">
+                    Remove ingredient
+                </div>
+
                 <div id="ingredientBoxes">
-                    <p>Name:</p>@Html.TextBoxFor(model => model.Ingredients[0].Name)
-                    <p>Quantity:</p>@Html.TextBoxFor(model => model.Ingredients[0].Quantity)
+                    <div id="ingredient0">
+                        <span>Name:</span>@Html.TextBoxFor(model => model.Ingredients[0].Name)
+                        <span>Quantity:</span>@Html.TextBoxFor(model => model.Ingredients[0].Quantity)
+                    </div>
                 </div>
             </div>
-            </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.WeightWatchersPoints, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -73,6 +73,14 @@
                 @Html.ValidationMessageFor(model => model.HealthyRating, "", new { @class = "text-danger" })
             </div>
         </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.FillingAndHealthy, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.FillingAndHealthy, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FillingAndHealthy, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -91,22 +99,24 @@
 
     function addRow() {
         
-        //var myRow = "<p>Name:</p><input id=\"Ingredients_0__Name\" name=\"Ingredients[0].Name\" type=\"text\" value=\"\">";
         ingredientIndex = parseInt(ingredientIndex) + 1;
-        //var myRow = 
-        //    "<p>Name:</p><input id=\"Ingredients_"+ ingredientIndex + 
-        //        "__Name\" name=\"Ingredients\" type=\"text\" value=\"\">";
-        var entry = "<p>Name:</p><input id=\"Ingredients_"+ ingredientIndex +
+        var entry = "<div id=\"ingredient" + ingredientIndex + "\"><span>Name:</span><input id=\"Ingredients_" + ingredientIndex +
             "__Name\" name=\"Ingredients[" + ingredientIndex +
-            "].Name\" type=\"text\" value=\"\"><p>Quantity:</p><input id=\"Ingredients_"
-        + ingredientIndex +"__Quantity\" name=\"Ingredients["+ ingredientIndex +"].Quantity\" type=\"text\" value=\"\">"
+            "].Name\" type=\"text\" value=\"\"> <span>Quantity:</span><input id=\"Ingredients_"
+            + ingredientIndex + "__Quantity\" name=\"Ingredients[" + ingredientIndex + "].Quantity\" type=\"text\" value=\"\"></div>";
 
         $("#ingredientBoxes input:last").after(entry);
+    }
 
+    function removeRow() {
+        if(ingredientIndex>0){
+            $("#ingredient"+ingredientIndex).remove();
+            ingredientIndex = parseInt(ingredientIndex) - 1; 
+        }
     }
 </script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
+    @Scripts.Render("~/bootstrap.js")
 }

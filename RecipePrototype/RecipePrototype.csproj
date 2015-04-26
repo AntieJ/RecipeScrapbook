@@ -180,6 +180,10 @@
     <Compile Include="Migrations\201504121253252_AddedHealthyRating.Designer.cs">
       <DependentUpon>201504121253252_AddedHealthyRating.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504262100302_AddedFillingAndHealthy.cs" />
+    <Compile Include="Migrations\201504262100302_AddedFillingAndHealthy.Designer.cs">
+      <DependentUpon>201504262100302_AddedFillingAndHealthy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HealthyRating.cs" />
@@ -190,7 +194,7 @@
     <Compile Include="Models\Recipe.cs" />
     <Compile Include="Models\RecipeDBContext.cs" />
     <Compile Include="Models\RecipeIngredient.cs" />
-    <Compile Include="Models\SearchVM.cs" />
+    <Compile Include="Models\RecipesVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -221,6 +225,8 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Styles\bootstrap.css" />
+    <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -244,6 +250,7 @@
     <Content Include="Views\Home\Edit.cshtml" />
     <Content Include="Views\Recipes\Index.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
+    <Content Include="Views\Home\Partials\MainRecipes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -267,6 +274,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504121253252_AddedHealthyRating.resx">
       <DependentUpon>201504121253252_AddedHealthyRating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504262100302_AddedFillingAndHealthy.resx">
+      <DependentUpon>201504262100302_AddedFillingAndHealthy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
