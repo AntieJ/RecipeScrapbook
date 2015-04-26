@@ -60,7 +60,7 @@ namespace RecipePrototype.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Method,WeightWatchersPoints,MealType,HealthyRating")] Recipe recipe)
+        public ActionResult Create([Bind(Include = "ID,Name,Method, Ingredients, WeightWatchersPoints,MealType,HealthyRating")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
@@ -162,6 +162,5 @@ namespace RecipePrototype.Controllers
 
             return View(recipeList.Distinct());
         }
-
     }
 }
