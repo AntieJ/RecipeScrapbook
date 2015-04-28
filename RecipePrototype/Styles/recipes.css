@@ -1,0 +1,22 @@
+p,
+h2 {
+    font-family: "Roboto";
+}
+
+body {
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+
+.nav {
+    margin: 0 auto;
+}
+
+.navbar .nav,
+.navbar .nav > li {
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+  *zoom:1; /* hasLayout ie7 trigger */
+  vertical-align: top;
+  margin: 0 auto;
+}

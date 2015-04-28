@@ -1,9 +1,7 @@
 ﻿@using RecipePrototype.Models
 @model RecipesVM
-@{
-    var skip = 0;
-}
-<h2 style="font-family: 'Roboto';">Lydia's Recipes</h2>
+
+<h2>Lydia's Recipes</h2>
 
 
     @using (Html.BeginForm("Search", "Home"))
@@ -73,25 +71,26 @@
 
 </table>
 
-<div class="center-block">
-<nav>
-    <ul class="pagination">
-        <li>
-            <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        @for (int i = 0; i < Model.PagesToShow; i++)
-        {
-            <li>@Html.ActionLink((i + 1).ToString(), "Index", new RouteValueDictionary() { { "skip", skip }, { "take", 5 } })</li>
-            { skip = skip + 5; }
-        }
-        <li>
-            <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
-    </div>
+<div class="center">
+    <nav>
+        <ul class="pagination text-center">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 0; i < Model.PagesToShow; i++)
+            {
+                <li>@Html.ActionLink((i + 1).ToString(), "Index", new RouteValueDictionary() { { "pageNumber", i + 1 } })</li>
+                //{ skip = skip + 5; }
+            }
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+    
 

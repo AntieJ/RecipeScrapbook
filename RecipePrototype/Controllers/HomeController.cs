@@ -5,41 +5,31 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using RecipePrototype.Models;
+using RecipePrototype.Services.Interfaces;
 
 namespace RecipePrototype.Controllers
 {
     public class HomeController : Controller
     {
-        private RecipeDBContext db = new RecipeDBContext();
+        private readonly IRepository<Recipe> _recipeRepository;
 
-        public ActionResult Index(int skip=0, int take=5)
+        public HomeController(IRepository<Recipe> recipeRepository)
         {
-            IEnumerable<Recipe> recipes = db.Recipes;
-            var recipesList = recipes.ToList().Skip(skip).Take(take);
-            var ingredients = db.Ingredients.ToList();
+            _recipeRepository = recipeRepository;
+        }
+
+        public ActionResult Index(int pageNumber = 1)
+        {
+            var recipesList = _recipeRepository.GetPaged(5, pageNumber);
             var vm = new RecipesVM()
             {
-                Recipes = recipesList,
-                TotalRecipes = recipes.Count(),
-                PagesToShow =  (int)Math.Ceiling((float)recipes.Count()/5)
+                Recipes = recipesList.Payload,
+                TotalRecipes = recipesList.TotalItems,
+                PagesToShow =  recipesList.TotalPages
             };
             return View(vm);
         }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
+        
         // GET: Recipes/Details/5
         public ActionResult Details(int? id)
         {
@@ -47,7 +37,7 @@ namespace RecipePrototype.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = db.Recipes.Find(id);
+            var recipe = _recipeRepository.Get(id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -70,8 +60,7 @@ namespace RecipePrototype.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Recipes.Add(recipe);
-                db.SaveChanges();
+                _recipeRepository.Create(recipe);//todo: notify of failure
                 return RedirectToAction("Search");
             }
 
@@ -85,7 +74,8 @@ namespace RecipePrototype.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = db.Recipes.Find(id);
+
+            var recipe = _recipeRepository.Get(id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -98,12 +88,11 @@ namespace RecipePrototype.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Method,WeightWatchersPoints,MealType,HealthyRating")] Recipe recipe)
+        public ActionResult Edit(Recipe recipe)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(recipe).State = EntityState.Modified;
-                db.SaveChanges();
+                _recipeRepository.Update(recipe);
                 return RedirectToAction("Search");
             }
             return View(recipe);
@@ -116,7 +105,7 @@ namespace RecipePrototype.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = db.Recipes.Find(id);
+            var recipe = _recipeRepository.Get(id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -129,28 +118,21 @@ namespace RecipePrototype.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Recipe recipe = db.Recipes.Find(id);
-            db.Recipes.Remove(recipe);
-            db.SaveChanges();
+            _recipeRepository.Delete(id);
             return RedirectToAction("Index");
         }
 
-        public ActionResult Search()
-        {
-            ViewBag.Message = "Search Page.";
-            var recipes = db.Recipes.ToList();
-            var ingredients = db.Ingredients.ToList();
-            return View(recipes);
-        }
-
         [HttpPost]
-        public ActionResult Search(string searchTerm)
+        public ActionResult Search(string searchTerm, int skip=0, int take=5)
         {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return RedirectToAction("Index");
+            }
             ViewBag.Message = "Search Page.";
 
-            var recipes = from m in db.Recipes
-                          select m;
-            var ingredients = db.Ingredients.ToList();
+            var recipes = _recipeRepository.GetQueryable();
+
             var recipeList = new List<Recipe>();
 
             if (!String.IsNullOrEmpty(searchTerm))
@@ -166,7 +148,16 @@ namespace RecipePrototype.Controllers
                 recipeList = recipes.ToList();
             }
 
-            return View(recipeList.Distinct());
+            var recipesList = recipeList.Distinct().ToList().Skip(skip).Take(take);
+
+            var vm = new RecipesVM()
+            {
+                Recipes = recipesList,
+                TotalRecipes = recipesList.Count(),
+                PagesToShow = (int)Math.Ceiling((float)recipesList.Count() / 5)
+            };
+
+            return View(vm);
         }
     }
 }

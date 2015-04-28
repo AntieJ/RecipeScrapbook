@@ -12,7 +12,7 @@ namespace RecipePrototype.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(RecipePrototype.Models.RecipeDBContext context)
